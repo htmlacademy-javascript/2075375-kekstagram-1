@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Владимир Короткевич](https://up.htmlacademy.ru/javascript-individual/1/user/2075375).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Сударев] (https://htmlacademy.ru/profile/id1152185).
 
 ---
 
