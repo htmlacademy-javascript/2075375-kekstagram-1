@@ -1,21 +1,43 @@
-const getRandomInt = (a, b) => { // Получение рандомного числа
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+const DESCRIPTIONS_COUNT = 25;
+const PHOTO_ID_MIN = 1;
+const PHOTO_ID_MAX = 25;
+const URL_MIN = 1;
+const URL_MAX = 25;
+const DESCRIPTION_PHOTO = 'Description';
+const LIKES_MIN = 15;
+const LIKES_MAX = 200;
+const USER_ID_MIN = 1;
+const USER_ID_MAX = 1000;
+const AVATAR_NUMBER_MIN = 1;
+const AVATAR_NUMBER_MAX = 6;
+const COMMENT_MESSAGE = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+const COMMENT_NAMES = ['Владимир', 'Игорь', 'Егор', 'Евгений', 'Андрей', 'Александра', 'Екатерина', 'Татьяна', 'Валерия', 'Зинаида'];
+
+
+
+const getRandomInt = (min, max) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
   return Math.floor(Math.random() * (upper - lower + 1) + lower);
 }
 
-const getIntNoRepeat = () => { // Получение рандомного неповторяющегося числа, используя замыкание
+const getIntUniq = (min, max) => {
   let array = [];
 
-  return function (a, b) {
-    let randomNumber = getRandomInt(a, b);
+  return function () {
+    let randomNumber = getRandomInt(min, max);
+
+    if (array.length >= (max - min + 1)) {
+      console.error('Перебраны все значения функции getIntUniq');
+      return;
+    }
 
     if (!array.includes(randomNumber)) {
       array.push(randomNumber);
       return randomNumber;
     } else {
       while (array.includes(randomNumber)) {
-        randomNumber = getRandomInt(a, b);
+        randomNumber = getRandomInt(min, max);
       }
       array.push(randomNumber);
       return randomNumber;
@@ -23,43 +45,16 @@ const getIntNoRepeat = () => { // Получение рандомного неп
   }
 }
 
-const getRandomMessage = () => { // Получение рандомного сообщения из объекта
-  let randomNumber = getRandomInt(1, 6);
-  let messages = {
-    1: 'Всё отлично!',
-    2: 'В целом всё неплохо. Но не всё.',
-    3: 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    4: 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    5: 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    6: 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
-  }
+const getRandomMessage = () => Array.from({length: getRandomInt(1, 2)}, () => COMMENT_MESSAGE[getRandomInt(0, COMMENT_MESSAGE.length - 1)]).join(' ');
 
-  return messages[randomNumber];
-}
 
-const getRandomName = () => { // Получение рандомного имени из объекта
-  let randomNumber = getRandomInt(1, 10);
-  let names = {
-    1: 'Владимир',
-    2: 'Игорь',
-    3: 'Егор',
-    4: 'Евгений',
-    5: 'Андрей',
-    6: 'Александра',
-    7: 'Екатерина',
-    8: 'Татьяна',
-    9: 'Валерия',
-    10: 'Зинаида',
-  }
+const getRandomName = () => COMMENT_NAMES[getRandomInt(0, COMMENT_NAMES.length - 1)];
 
-  return names[randomNumber];
-}
-
-const getPhotosComment = () => { // Получение рандомного коммента
-  let userID = getIntNoRepeat();
+let userID = getIntUniq(USER_ID_MIN, USER_ID_MAX);
+const getPhotosComment = () => {
   let photosComment = {
-    id: userID(1, 1000),
-    avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
+    id: userID(),
+    avatar: 'img/avatar-' + getRandomInt(AVATAR_NUMBER_MIN, AVATAR_NUMBER_MAX) + '.svg',
     message: getRandomMessage(),
     name: getRandomName(),
   }
@@ -67,33 +62,19 @@ const getPhotosComment = () => { // Получение рандомного ко
   return photosComment;
 }
 
-const getCommentsArray = () => { // Получение массива с рандомным количеством рандомных комментов
-  let commentsArray = [];
-  let commentsCount = getRandomInt(1, 5);
+const getCommentsArray = () => Array.from({length: getRandomInt(1, 5)}, () => (getPhotosComment()));
 
-  while (commentsArray.length < commentsCount) {
-    commentsArray.push(getPhotosComment());
-  }
+const getDescriptionsPhotoArray = () => {
+  let photosID = getIntUniq(PHOTO_ID_MIN, PHOTO_ID_MAX);
+  let photosURL = getIntUniq(URL_MIN, URL_MAX);
 
-  return commentsArray;
-}
-
-const getDescriptionsPhotoArray = () => { // Окончательный результат - массив из 25 объектов с описаниями фото
-  let descriptionPhotosArray = [];
-  let photosID = getIntNoRepeat();
-  let photosURL = getIntNoRepeat();
-
-  while (descriptionPhotosArray.length < 25) {
-    descriptionPhotosArray.push(
-      {
-        id: photosID(1, 25),
-        url: 'photos/' + photosURL(1, 25) + '.jpg',
-        description: 'something',
-        likes: getRandomInt(15, 200),
-        comment: getCommentsArray(),
-      }
-    );
-  }
-
-  return descriptionPhotosArray;
+  return Array.from({length: DESCRIPTIONS_COUNT}, () => (
+    {
+      id: photosID(),
+      url: 'photos/' + photosURL() + '.jpg',
+      description: DESCRIPTION_PHOTO,
+      likes: getRandomInt(LIKES_MIN, LIKES_MAX),
+      comment: getCommentsArray(),
+    }
+  ));
 }
