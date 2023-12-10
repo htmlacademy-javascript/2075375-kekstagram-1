@@ -13,16 +13,14 @@ const AVATAR_NUMBER_MAX = 6;
 const COMMENT_MESSAGE = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 const COMMENT_NAMES = ['Владимир', 'Игорь', 'Егор', 'Евгений', 'Андрей', 'Александра', 'Екатерина', 'Татьяна', 'Валерия', 'Зинаида'];
 
-
-
 const getRandomInt = (min, max) => {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
   return Math.floor(Math.random() * (upper - lower + 1) + lower);
-}
+};
 
 const getIntUniq = (min, max) => {
-  let array = [];
+  const array = [];
 
   return function () {
     let randomNumber = getRandomInt(min, max);
@@ -42,31 +40,31 @@ const getIntUniq = (min, max) => {
       array.push(randomNumber);
       return randomNumber;
     }
-  }
-}
+  };
+};
 
 const getRandomMessage = () => Array.from({length: getRandomInt(1, 2)}, () => COMMENT_MESSAGE[getRandomInt(0, COMMENT_MESSAGE.length - 1)]).join(' ');
 
 
 const getRandomName = () => COMMENT_NAMES[getRandomInt(0, COMMENT_NAMES.length - 1)];
 
-let userID = getIntUniq(USER_ID_MIN, USER_ID_MAX);
+const userID = getIntUniq(USER_ID_MIN, USER_ID_MAX);
 const getPhotosComment = () => {
-  let photosComment = {
+  const photosComment = {
     id: userID(),
     avatar: 'img/avatar-' + getRandomInt(AVATAR_NUMBER_MIN, AVATAR_NUMBER_MAX) + '.svg',
     message: getRandomMessage(),
     name: getRandomName(),
-  }
+  };
 
   return photosComment;
-}
+};
 
 const getCommentsArray = () => Array.from({length: getRandomInt(1, 5)}, () => (getPhotosComment()));
 
 const getDescriptionsPhotoArray = () => {
-  let photosID = getIntUniq(PHOTO_ID_MIN, PHOTO_ID_MAX);
-  let photosURL = getIntUniq(URL_MIN, URL_MAX);
+  const photosID = getIntUniq(PHOTO_ID_MIN, PHOTO_ID_MAX);
+  const photosURL = getIntUniq(URL_MIN, URL_MAX);
 
   return Array.from({length: DESCRIPTIONS_COUNT}, () => (
     {
@@ -77,4 +75,4 @@ const getDescriptionsPhotoArray = () => {
       comment: getCommentsArray(),
     }
   ));
-}
+};
