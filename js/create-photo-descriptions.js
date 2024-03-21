@@ -30,7 +30,7 @@ const getPhotoDescriptions = () => {
   return Array.from({length: DESCRIPTION_COUNT}, (photoDescription) => {
     return photoDescription = {
       photoID: photoID(),
-      photoURL: photoURL(),
+      photoURL: 'photos/' + photoURL() + '.jpg',
       description: PHOTO_DESCRIPTION[getRandomInt(0, PHOTO_DESCRIPTION.length - 1)],
       likes: getRandomInt(15, 200),
       comments: getComments(1, 5),

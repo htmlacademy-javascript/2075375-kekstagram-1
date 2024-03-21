@@ -1,4 +1,4 @@
-import { getPhotoDescriptions } from "./create-photo-description.js";
+import { getPhotoDescriptions } from "./create-photo-descriptions.js";
+import { renderPhoto } from "./render-photo.js";
 
-console.log(getPhotoDescriptions());
-
+renderPhoto();
