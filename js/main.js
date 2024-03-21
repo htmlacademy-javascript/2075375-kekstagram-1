@@ -1,3 +1,4 @@
-import { getDescriptionsPhotoArray } from "./create-photo-array.js";
+import { getPhotoDescriptions } from "./create-photo-description.js";
 
-getDescriptionsPhotoArray();
+console.log(getPhotoDescriptions());
+

@@ -5,12 +5,12 @@ const getRandomInt = (min, max) => {
 };
 
 const getIntUniq = (min, max) => {
-  const array = [];
+  let array = [];
 
   return function () {
     let randomNumber = getRandomInt(min, max);
 
-    if (array.length >= (max - min + 1)) {
+    if (array.length >= max) {
       console.error('Перебраны все значения функции getIntUniq');
       return;
     }
@@ -25,7 +25,7 @@ const getIntUniq = (min, max) => {
       array.push(randomNumber);
       return randomNumber;
     }
-  };
-};
+  }
+}
 
 export { getRandomInt, getIntUniq };
