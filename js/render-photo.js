@@ -1,16 +1,14 @@
-import { getPhotoDescriptions } from "./create-photo-descriptions.js";
-
-const renderPhoto = () => {
+const renderPhoto = (array) => {
   const pictureTemplate = document.querySelector('#picture').content;
   const fragment = document.createDocumentFragment();
-  const photoDescriptionsArray = getPhotoDescriptions();
   const pictures = document.querySelector('.pictures');
 
-  photoDescriptionsArray.forEach((element) => {
+  array.forEach((element) => {
     const pictureTemplateCopy = pictureTemplate.cloneNode(true);
     pictureTemplateCopy.querySelector('.picture__img').src = element.photoURL;
+    pictureTemplateCopy.querySelector('.picture__img').id = element.photoID;
     pictureTemplateCopy.querySelector('.picture__likes').textContent = element.likes;
-    pictureTemplateCopy.querySelector('.picture__comments').textContent = element.comments;
+    pictureTemplateCopy.querySelector('.picture__comments').textContent = element.comments.length;
     fragment.append(pictureTemplateCopy);
   });
 

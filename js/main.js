@@ -1,4 +1,3 @@
-import { getPhotoDescriptions } from "./create-photo-descriptions.js";
-import { renderPhoto } from "./render-photo.js";
+import { renderModal } from "./render-modal.js";
 
-renderPhoto();
+renderModal();
