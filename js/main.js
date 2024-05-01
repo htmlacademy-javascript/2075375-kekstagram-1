@@ -1,3 +1,4 @@
-import { renderModal } from "./render-modal.js";
+import { renderGallery } from "./render-gallery.js";
 
-renderModal();
+renderGallery();
+
