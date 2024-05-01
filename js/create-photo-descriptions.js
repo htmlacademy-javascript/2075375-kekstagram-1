@@ -8,7 +8,7 @@ const PHOTO_ID_MAX = 25;
 const PHOTO_URL_MIN = 1;
 const PHOTO_URL_MAX = 25;
 const COMMENT_ID_MIN = 1;
-const COMMENT_ID_MAX = 5;
+const COMMENT_ID_MAX = 25;
 
 const getComments = (minCount, maxCount) => {
   let commentID = getIntUniq(COMMENT_ID_MIN, COMMENT_ID_MAX);
@@ -33,7 +33,7 @@ const getPhotoDescriptions = () => {
       photoURL: 'photos/' + photoURL() + '.jpg',
       description: PHOTO_DESCRIPTION[getRandomInt(0, PHOTO_DESCRIPTION.length - 1)],
       likes: getRandomInt(15, 200),
-      comments: getComments(1, 5),
+      comments: getComments(1, 25),
     };
   });
 };

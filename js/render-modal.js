@@ -1,22 +1,13 @@
-import { getPhotoDescriptions } from "./create-photo-descriptions.js";
-import { renderPhoto } from "./render-photo.js";
-
-const photoDescriptionsArray = getPhotoDescriptions();
-renderPhoto(photoDescriptionsArray);
-
-const renderModal = () => {
+const renderModal = (photoDescriptionsArray) => {
   const modal = document.querySelector('.big-picture');
+  const fragment = document.createDocumentFragment();
+  const modalComments = modal.querySelector('.social__comments');
+  const loadCommentsButton = modal.querySelector('.comments-loader');
+  const commentsCount = modal.querySelector('.social__comment-count');
 
   function openModal () {
     modal.classList.remove('hidden');
-    modal.querySelector('.social__comment-count').classList.add('hidden');
-    modal.querySelector('.social__comments-loader').classList.add('hidden');
     document.body.classList.add('modal-open');
-  }
-
-  function closeModal () {
-    modal.classList.add('hidden');
-    document.body.classList.remove('modal-open');
   }
 
   function renderModalContent (currentPhotoObject) {
@@ -25,28 +16,29 @@ const renderModal = () => {
     modal.querySelector('.social__caption').textContent = currentPhotoObject.description;
   }
 
-  function renderComments (currentPhotoObject) {
-    const fragment = document.createDocumentFragment();
-
-    currentPhotoObject.comments.forEach((comment) => {
-      const newComment = document.createElement('li');
-
-      newComment.classList.add('social__comment');
-      newComment.insertAdjacentHTML('afterbegin', `<p class="social__text">${comment.message}</p>`);
-      newComment.insertAdjacentHTML('afterbegin', `<img
-      class="social__picture
-      src=${comment.avatar}
-      alt=${comment.name}
-      width="35" height="35">`);
-
-      fragment.append(newComment);
-    });
-
-    const modalComments = modal.querySelector('.social__comments');
-    modalComments.innerHTML = '';
-    modalComments.append(fragment);
+  function renderMoreComments () {
+    if (fragment.children.length <= 5) {
+      modalComments.append(fragment);
+      loadCommentsButton.classList.add('hidden');
+    } else {
+      Object.values(fragment.children).slice(0, 5).forEach((comment) => {
+        modalComments.append(comment);
+      });
+    }
   }
 
+  function clearFragment () {
+    modalComments.append(fragment);
+    modalComments.innerHTML = '';
+  }
+
+  function closeModal () {
+    modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    loadCommentsButton.classList.remove('hidden');
+    loadCommentsButton.removeEventListener('click', renderMoreComments);
+    clearFragment();
+  }
 
   document.querySelector('.pictures').addEventListener('click', (evt) => {
     evt.preventDefault();
@@ -61,7 +53,40 @@ const renderModal = () => {
       });
 
       renderModalContent(currentPhotoObject);
-      renderComments(currentPhotoObject);
+
+      currentPhotoObject.comments.forEach((comment) => {
+        const newComment = document.createElement('li');
+        newComment.classList.add('social__comment');
+        newComment.insertAdjacentHTML('afterbegin', `<p class="social__text">${comment.message}</p>`);
+        newComment.insertAdjacentHTML('afterbegin', `<img
+        class="social__picture"
+        src=${comment.avatar}
+        alt=${comment.name}
+        width="35" height="35">`);
+
+        fragment.append(newComment);
+      });
+
+      modalComments.innerHTML = '';
+
+      const renderCommentsCounter = () => {
+        commentsCount.innerHTML = '';
+        commentsCount.insertAdjacentHTML('afterbegin', `${modalComments.children.length} из ${currentPhotoObject.comments.length} комментариев`);
+
+        if (fragment.children.length === 0) {
+          loadCommentsButton.removeEventListener('click', renderCommentsCounter);
+        }
+      };
+
+      if (fragment.children.length <= 5) {
+        modalComments.append(fragment);
+        loadCommentsButton.classList.add('hidden');
+      } else {
+        Object.values(fragment.children).slice(0, 5).forEach((comment) => modalComments.append(comment));
+        renderCommentsCounter();
+        loadCommentsButton.addEventListener('click', renderMoreComments);
+        loadCommentsButton.addEventListener('click', renderCommentsCounter);
+      }
     }
   });
 
